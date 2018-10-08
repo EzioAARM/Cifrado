@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorCardBackground"
     tools:context=".CifrarFragment">
@@ -11,6 +12,42 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         style="@style/StyleCard">
+
+        <TextView
+            android:id="@+id/info_cifrados_cifrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/robotothin"
+            android:textSize="14sp"
+            android:layout_marginTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:text="@string/seleccionar_cifrado"/>
+
+        <Spinner
+            android:id="@+id/cifrados_cifrar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/info_cifrados_cifrar"
+            android:layout_marginTop="0dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="15dp"
+            android:entries="@array/Cifrados"
+            android:padding="10dp" />
+
+        <FrameLayout
+            android:id="@+id/contenedor_cifrados"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignLeft="@+id/cifrados_cifrar"
+            android:layout_below="@+id/cifrados_cifrar"
+            android:paddingTop="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="25dp">
+
+
+        </FrameLayout>
 
     </RelativeLayout>
 

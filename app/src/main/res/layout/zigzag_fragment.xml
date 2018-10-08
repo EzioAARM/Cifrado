@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ZigZagFragment">
+
+    <Button
+        android:id="@+id/examinar_cifrar_zigzag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        style="@style/StyleButton"
+        android:text="Examinar" />
+
+    <EditText
+        android:id="@+id/ubicacion_archivo_cifrar_zigzag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/examinar_cifrar_zigzag"
+        android:editable="false"
+        android:hint="@string/ubicacion"/>
+
+    <TextView
+        android:id="@+id/info_separacion_cifrar_zigzag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ubicacion_archivo_cifrar_zigzag"
+        android:fontFamily="@font/robotothin"
+        android:textSize="14sp"
+        android:layout_marginTop="15dp"
+        android:text="@string/niveles"/>
+
+    <EditText
+        android:id="@+id/niveles_separacion_cifrar_zigzag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/info_separacion_cifrar_zigzag"
+        android:inputType="numberSigned"
+        android:hint="@string/niveles"
+        android:ems="10" />
+</RelativeLayout>

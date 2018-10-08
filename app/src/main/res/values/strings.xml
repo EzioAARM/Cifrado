@@ -1,11 +1,14 @@
 <resources>
     <string name="app_name">Cifrado</string>
-    <array name="Cifrados">
+    <string-array name="Cifrados">
         <item>Zig-Zag</item>
-    </array>
+    </string-array>
     <string name="cifrar">Cifrar</string>
     <string name="cifrados">Cifrados</string>
     <string name="descifrar">Descifrar</string>
     <string name="nav_open">Abrir</string>
     <string name="nav_close">Cerrar</string>
+    <string name="ubicacion">Ubicacion del archivo seleccionado</string>
+    <string name="seleccionar_cifrado">Seleccione un método de cifrado</string>
+    <string name="niveles">Niveles de separación</string>
 </resources>

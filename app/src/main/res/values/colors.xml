@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#003d33</color>
     <color name="colorPrimaryLight">#439889</color>
     <color name="colorText">#ffffff</color>
+    <color name="colorTextDark">#1d1d1d</color>
     <color name="colorCardBackground">#e1e2e1</color>
     <color name="colorCard">#f5f5f6</color>
     <color name="colorZigZag">#0277BD</color>
