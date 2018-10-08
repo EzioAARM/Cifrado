@@ -20,12 +20,12 @@
             <TextView
                 android:id="@+id/nombre_cifrado_cifrados"
                 android:fontFamily="@font/robotobold"
-                android:textSize="25dp"
+                android:textSize="25sp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingBottom="5dp"
                 android:textColor="@color/colorText"
-                android:text="Hola"/>
+                android:text="Nombre"/>
 
             <TextView
                 android:id="@+id/tipo_cifrado_cifrados"
@@ -34,7 +34,7 @@
                 android:textColor="@color/colorText"
                 android:paddingTop="6dp"
                 android:layout_alignParentRight="true"
-                android:text="ZigZag"/>
+                android:text="Metodo"/>
 
         </RelativeLayout>
 
@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorText"
-            android:text="ubicacion"/>
+            android:text="Ubicacion"/>
 
     </LinearLayout>
 
