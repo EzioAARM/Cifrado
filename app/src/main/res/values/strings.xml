@@ -8,7 +8,10 @@
     <string name="descifrar">Descifrar</string>
     <string name="nav_open">Abrir</string>
     <string name="nav_close">Cerrar</string>
-    <string name="ubicacion">Ubicacion del archivo seleccionado</string>
+    <string name="ubicacion">Ubicacion del archivo a cifrar</string>
     <string name="seleccionar_cifrado">Seleccione un método de cifrado</string>
     <string name="niveles">Niveles de separación</string>
+    <string name="sobreescribir">¿Sobreescribir el archivo si ya existe?</string>
+    <string name="no_sobre">No se sobreescribiran los archivos que coincidan en la carpeta</string>
+    <string name="si_sobre">Se sobreescribiran los archivos que coincidan en la carpeta</string>
 </resources>
