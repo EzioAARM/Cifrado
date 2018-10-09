@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ZigZagDescifrarFragment">
+
+    <EditText
+        android:id="@+id/niveles_separacion_descifrar_zigzag"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:inputType="numberSigned"
+        android:hint="@string/niveles"
+        android:ems="10" />
+
+    <CheckBox
+        android:id="@+id/sobreescribir_descifrar_zigzag"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/niveles_separacion_descifrar_zigzag"
+        android:text="@string/sobreescribir"/>
+
+    <TextView
+        android:id="@+id/info_carpeta_destino_descifrar_descifrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/sobreescribir_descifrar_zigzag"
+        android:text="@string/no_sobre"/>
+
+    <Button
+        android:id="@+id/descifrar_descifrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        style="@style/StyleButton"
+        android:text="Descifrar"/>
+
+</RelativeLayout>

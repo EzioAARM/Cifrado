@@ -12,6 +12,54 @@
         android:layout_height="fill_parent"
         style="@style/StyleCard">
 
+        <Button
+            android:id="@+id/examinar_descifrar_descifrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginRight="25dp"
+            style="@style/StyleButton"
+            android:text="Examinar..." />
+
+        <Button
+            android:id="@+id/examinar_carpeta_descifrar_descifrar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="25dp"
+            android:layout_marginLeft="25dp"
+            style="@style/StyleButton"
+            android:text="Carpeta de destino" />
+
+        <EditText
+            android:id="@+id/ubicacion_archivo_descifrar"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:hint="Ubicación del archivo a descifrar"
+            android:editable="false"
+            android:layout_below="@id/examinar_carpeta_descifrar_descifrar"/>
+
+        <FrameLayout
+            android:id="@+id/contenedor_descifrados"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_alignLeft="@+id/ubicacion_archivo_descifrar"
+            android:layout_below="@+id/ubicacion_archivo_descifrar"
+            android:paddingTop="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="25dp">
+
+
+        </FrameLayout>
+
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>
