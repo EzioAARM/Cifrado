@@ -33,6 +33,7 @@ public class ZigZagFragment extends Fragment {
     private static String UBICACION_ARCHIVO_CIFRAR = " ";
     private static final int READ_REQUEST_CODE_FILE = 1;
     private String TextoCifrar = "";
+    private boolean SobreescribirArchivo = false;
     View rootView;
 
     @Nullable
@@ -81,8 +82,13 @@ public class ZigZagFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
+<<<<<<< HEAD
+                    // Poner el cifrado aquí
+
+=======
                     zigZag encriptador = new zigZag(TextoCifrar, getContext(), 6);
                     encriptador.cifrar();
+>>>>>>> 742288e4e61206185dd773b03d71a8be2562b909
                 } catch (Exception ex) {
                     Toast.makeText(rootView.getContext(), "Hubo un error cifrando el archivo", Toast.LENGTH_LONG).show();
                 }
