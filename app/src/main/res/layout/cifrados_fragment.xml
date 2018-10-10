@@ -13,6 +13,19 @@
         android:layout_height="fill_parent"
         style="@style/StyleCard">
 
+        <ListView
+            android:id="@+id/listado_archivos_cifrados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"/>
+
+        <TextView
+            android:id="@+id/sin_cifrados_cifrados"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:textSize="22dp"
+            android:textAlignment="center"
+            android:text="Aún no se han cifrado archivos"/>
     </RelativeLayout>
 
 </android.support.constraint.ConstraintLayout>

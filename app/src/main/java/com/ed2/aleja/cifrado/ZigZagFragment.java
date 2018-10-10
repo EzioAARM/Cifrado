@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.ParcelFileDescriptor;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -29,12 +30,15 @@ import com.ed2.aleja.clases_cifrados.zigZag;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.URISyntaxException;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_APPEND;
 
 public class ZigZagFragment extends Fragment {
 
@@ -52,9 +56,9 @@ public class ZigZagFragment extends Fragment {
 
         File directorio = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            directorio = new File(Environment.getExternalStorageDirectory() + "/CifradosEstructuras/");
+            directorio = new File(Environment.getExternalStorageDirectory() + "/CifradoEstructuras/");
         else
-            directorio = new File(rootView.getContext().getFilesDir() + "/CifradosEstructuras/");
+            directorio = new File(rootView.getContext().getFilesDir() + "/CifradoEstructuras/");
         if (!directorio.exists())
             directorio.mkdir();
         TextView mostrarInformacionDirectorio = (TextView) rootView.findViewById(R.id.info_carpeta_destino_cifrar_zigzag);
@@ -99,8 +103,15 @@ public class ZigZagFragment extends Fragment {
                     if (!nivelesSeparacion.getText().toString().equals("")) {
                         String extension = UBICACION_ARCHIVO_CIFRAR.substring(UBICACION_ARCHIVO_CIFRAR.lastIndexOf('.') + 1);
                         int niveles = Integer.parseInt(nivelesSeparacion.getText().toString());
-                        zigZag encriptador = new zigZag(extension + "|" + TextoCifrar, getContext(), niveles, SobreescribirArchivo);
+                        String nombreArchivo = UBICACION_ARCHIVO_CIFRAR.substring(0, UBICACION_ARCHIVO_CIFRAR.lastIndexOf('.'));
+                        zigZag encriptador = new zigZag(extension + "|" + TextoCifrar, getContext(), niveles, SobreescribirArchivo, nombreArchivo);
                         encriptador.cifrar();
+
+                        FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
+                        OutputStreamWriter escritor = new OutputStreamWriter(output);
+                        escritor.append(UBICACION_ARCHIVO_CIFRAR + "|" + UBICACION_GUARDAR + "/" + UBICACION_ARCHIVO_CIFRAR + "|" + "ZigZag");
+                        escritor.close();
+                        Toast.makeText(rootView.getContext(), "El archivo se cifró correctamente", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(rootView.getContext(), "Debe ingresar el número de niveles para cifrar", Toast.LENGTH_LONG).show();
                     }

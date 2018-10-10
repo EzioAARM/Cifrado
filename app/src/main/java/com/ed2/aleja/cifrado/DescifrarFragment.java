@@ -71,6 +71,7 @@ public class DescifrarFragment extends Fragment {
                         ZigZagDescifrarFragment zigZagDescifrarFragment = new ZigZagDescifrarFragment();
                         Bundle argumentos = new Bundle();
                         argumentos.putSerializable("textoDescifrar", textoArchivo);
+                        argumentos.putSerializable("nombreArchivo", UBICACION_ARCHIVO_DESCIFRAR);
                         zigZagDescifrarFragment.setArguments(argumentos);
                         fragmentManager.beginTransaction().replace(R.id.contenedor_descifrados, zigZagDescifrarFragment).commit();
                         break;

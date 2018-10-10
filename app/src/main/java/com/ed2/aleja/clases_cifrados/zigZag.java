@@ -31,7 +31,8 @@ public class zigZag {
     public ArrayList<Character> charList;
     private boolean SobreescribirArchivo;
 
-    public zigZag(String text, Context contextApp, int levels, boolean sobreescribir){
+    public zigZag(String text, Context contextApp, int levels, boolean sobreescribir, String nombreArchivo){
+        setNombreArchivoNuevo(nombreArchivo);
         Context = contextApp;
         TextArchivo = text;
         lvls = levels;
@@ -40,7 +41,6 @@ public class zigZag {
     }
 
     public void cifrar (){
-        setNombreArchivoNuevo("archivoCifrado");
         String cifrado = "";
         int salto;
         char[] noCifrado = TextArchivo.toCharArray();
@@ -80,7 +80,6 @@ public class zigZag {
 
     public void desCifrar(String cifrado, int levels){
         char [] aCifrado = cifrado.toCharArray();
-        setNombreArchivoNuevo("archivoDescifrado");
         String outPut = "";
         lvls = levels;
         tOla = (levels-1)*2;
@@ -121,7 +120,7 @@ public class zigZag {
             indice2++;
         }
         try {
-            escribirArchivoDescifrado(NombreArchivoNuevo +"."+ extensionA, outPut);
+            escribirArchivoDescifrado(NombreArchivoNuevo, outPut);
         }
         catch (Exception e){
 
@@ -180,23 +179,31 @@ public class zigZag {
         if (!SobreescribirArchivo) {
             boolean creado = false;
             int numeroArchivo = 1;
-            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo);
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
             creado = archivoEscribir.createNewFile();
             while (!creado) {
-                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + ".cif");
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + "." + extensionA);
                 creado = archivoEscribir.createNewFile();
+                numeroArchivo++;
             }
-        }
-        archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo);
-        if (archivoEscribir.exists()) {
-            throw new Exception("El archivo " + nombreArchivo + " ya existe");
         } else {
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            archivoEscribir.delete();
             if (!archivoEscribir.createNewFile())
-                throw new Exception("No se pudo crear el archivo " + archivoEscribir.getAbsolutePath());
-            FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
-            fileOutputStream.write(contenido.getBytes());
-            fileOutputStream.close();
+                throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
         }
+        boolean eliminoExtension = false;
+        int i = 0;
+        while (!eliminoExtension) {
+            if (contenido.charAt(i) == '|') {
+                contenido = contenido.substring(i + 1);
+                eliminoExtension = true;
+            }
+            i++;
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
+        fileOutputStream.write(contenido.getBytes());
+        fileOutputStream.close();
     }
 
     public void setNombreOriginalArchivo(String nombre) {

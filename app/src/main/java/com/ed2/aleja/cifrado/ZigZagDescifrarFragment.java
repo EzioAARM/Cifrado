@@ -24,6 +24,7 @@ public class ZigZagDescifrarFragment extends Fragment {
     private String TextoDescifrar = "";
     private static String UBICACION_GUARDAR = "";
     public static boolean SobreescribirArchivo = false;
+    public static String NombreArchivo = "";
 
     @Nullable
     @Override
@@ -32,12 +33,13 @@ public class ZigZagDescifrarFragment extends Fragment {
 
         Bundle argumentos = getArguments();
         TextoDescifrar = (String) argumentos.getSerializable("textoDescifrar");
+        NombreArchivo = (String) argumentos.getSerializable("nombreArchivo");
 
         File directorio = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
-            directorio = new File(Environment.getExternalStorageDirectory() + "/DescifradosEstructuras/");
+            directorio = new File(Environment.getExternalStorageDirectory() + "/DescifradoEstructuras/");
         else
-            directorio = new File(rootView.getContext().getFilesDir() + "/DescifradosEstructuras/");
+            directorio = new File(rootView.getContext().getFilesDir() + "/DescifradoEstructuras/");
         if (!directorio.exists())
             directorio.mkdir();
         TextView mostrarInformacionDirectorio = (TextView) rootView.findViewById(R.id.info_carpeta_destino_descifrar_descifrar);
@@ -69,8 +71,10 @@ public class ZigZagDescifrarFragment extends Fragment {
                 if (!nivelesSeparacion.getText().toString().equals("")) {
                     // código para descifrar
                     int niveles = Integer.parseInt(nivelesSeparacion.getText().toString());
-                    zigZag decriptador = new zigZag("", getContext(), niveles,false);
+                    NombreArchivo = NombreArchivo.substring(0, NombreArchivo.lastIndexOf('.'));
+                    zigZag decriptador = new zigZag("", getContext(), niveles,false, NombreArchivo);
                     decriptador.desCifrar(TextoDescifrar, niveles);
+                    Toast.makeText(rootView.getContext(), "El archivo se descifró correctamente", Toast.LENGTH_LONG).show();
 
                 } else {
                     Toast.makeText(rootView.getContext(), "Debe ingresar el número de niveles para cifrar", Toast.LENGTH_LONG).show();
