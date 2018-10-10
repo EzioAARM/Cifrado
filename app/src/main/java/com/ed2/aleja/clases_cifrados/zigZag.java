@@ -6,6 +6,7 @@ import android.os.Environment;
 import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.security.cert.Extension;
 import java.util.ArrayList;
 
 
@@ -21,6 +22,7 @@ public class zigZag {
     int salto;
     int lvls;
     String TextArchivo;
+    String extensionA = "";
     Context Context;
     public String NombreArchivoNuevo = "";
     public String NombreOriginalArchivo = "";
@@ -56,6 +58,7 @@ public class zigZag {
             salto = tOla-(2*z);
             if(z == 0 || z == lvls -1){
                 for (int x = 0; x < nOlas; x++){
+                    salto = tOla;
                     cifrado = cifrado + charList.get(z + (x*salto));
                 }
             }
@@ -81,12 +84,13 @@ public class zigZag {
         String outPut = "";
         lvls = levels;
         tOla = (levels-1)*2;
-        nOlas = aCifrado.length%tOla;
+        nOlas = aCifrado.length/tOla;
         tBloque = nOlas * 2;
-        nBloques = (aCifrado.length - cresta - cola)%tBloque;
         cresta = cola = nOlas;
+        nBloques = (aCifrado.length - cresta - cola)/tBloque;
         char [] aCresta = new char[cresta];
         char [] aCola = new char[cola];
+        int indice = 0;
         ArrayList<Character> aBloque = new ArrayList<>();
         for (int i = 0; i < aCifrado.length; i++){
             if (i < cresta){
@@ -96,7 +100,8 @@ public class zigZag {
                 aBloque.add(aCifrado[i]);
             }
             else {
-                aCola[i] = aCifrado[i];
+                aCola[indice] = aCifrado[i];
+                indice++;
             }
         }
         for (int j = 0; j < cresta; j++) {
@@ -109,8 +114,14 @@ public class zigZag {
                 outPut = outPut + aBloque.get((z*tBloque)+(j*2)+1);
             }
         }
+        aCresta = outPut.toCharArray();
+        int indice2 = 0;
+        while (aCresta[indice2] != '|'){
+            extensionA = extensionA + aCresta[indice2];
+            indice2++;
+        }
         try {
-            escribirArchivoDescifrado(NombreArchivoNuevo, outPut);
+            escribirArchivoDescifrado(NombreArchivoNuevo +"."+ extensionA, outPut);
         }
         catch (Exception e){
 

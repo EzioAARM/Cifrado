@@ -14,6 +14,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ed2.aleja.clases_cifrados.zigZag;
+
 import java.io.File;
 
 public class ZigZagDescifrarFragment extends Fragment {
@@ -67,6 +69,9 @@ public class ZigZagDescifrarFragment extends Fragment {
                 if (!nivelesSeparacion.getText().toString().equals("")) {
                     // código para descifrar
                     int niveles = Integer.parseInt(nivelesSeparacion.getText().toString());
+                    zigZag decriptador = new zigZag("", getContext(), niveles,false);
+                    decriptador.desCifrar(TextoDescifrar, niveles);
+
                 } else {
                     Toast.makeText(rootView.getContext(), "Debe ingresar el número de niveles para cifrar", Toast.LENGTH_LONG).show();
                 }
