@@ -77,8 +77,14 @@ public class zigZag {
         nOlas = nOlas = aCifrado.length%tOla;
         tBloque = nOlas * 2;
         cresta = cola = nOlas;
+        char [] aCresta = new char[cresta];
+        char [] aCola = new char[cola];
+        char [] aBloque = new char[aCifrado.length - (cresta+cola)];
         for (int i = 0; i < aCifrado.length; i++){
+            if (i < cresta){
 
+            }
+            
         }
     }
 
