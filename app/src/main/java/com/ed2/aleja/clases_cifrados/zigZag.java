@@ -77,10 +77,11 @@ public class zigZag {
 
     public void desCifrar(String cifrado, int levels){
         char [] aCifrado = cifrado.toCharArray();
+        setNombreArchivoNuevo("archivoDescifrado");
         String outPut = "";
         lvls = levels;
         tOla = (levels-1)*2;
-        nOlas = nOlas = aCifrado.length%tOla;
+        nOlas = aCifrado.length%tOla;
         tBloque = nOlas * 2;
         nBloques = (aCifrado.length - cresta - cola)%tBloque;
         cresta = cola = nOlas;
@@ -101,8 +102,18 @@ public class zigZag {
         for (int j = 0; j < cresta; j++) {
             outPut = outPut + aCresta[j];
             for (int z = 0; z < nBloques; z++){
-
+                outPut = outPut + aBloque.get((z*tBloque)+(j*2));
             }
+            outPut = outPut + aCola[j];
+            for (int z = nBloques -1; z >= 0; z--){
+                outPut = outPut + aBloque.get((z*tBloque)+(j*2)+1);
+            }
+        }
+        try {
+            escribirArchivoDescifrado(NombreArchivoNuevo, outPut);
+        }
+        catch (Exception e){
+
         }
     }
 
