@@ -33,14 +33,14 @@ public class zigZag {
         TextArchivo = text;
         lvls = levels;
         tOla = (levels-1)*2;
-
     }
 
     public void cifrar (){
+        setNombreArchivoNuevo("archivoCifrado");
         String cifrado = "";
         int salto;
         char[] noCifrado = TextArchivo.toCharArray();
-        nOlas = noCifrado.length%tOla;
+        charList = new ArrayList<>();
         for (int j = 0; j < noCifrado.length; j++){
             charList.add(noCifrado[j]);
         }
@@ -49,21 +49,24 @@ public class zigZag {
         for (int i = 0; i < extras; i++){
             charList.add('|');
         }
+        nOlas = charList.size()/tOla;
         for (int z = 0; z < lvls; z++){
             salto = tOla-(2*z);
             if(z == 0 || z == lvls -1){
                 for (int x = 0; x < nOlas; x++){
-                    cifrado = cifrado + noCifrado[z + (x*salto)];
+                    cifrado = cifrado + charList.get(z + (x*salto));
                 }
             }
             else {
-                for (int s = 0; s < nOlas*2; s++){
-                    cifrado = cifrado + noCifrado[z+(s*salto)];
+                int var = charList.size()%tOla;
+                for (int s = 0; s < nOlas; s++){
+                    cifrado = cifrado +charList.get((s*tOla)+z) +charList.get(z+(s*tOla)+salto);
                 }
             }
         }
+        int var = charList.size()%tOla;
         try {
-            escribirArchivoCifrado(NombreOriginalArchivo + ".cif", cifrado);
+            escribirArchivoCifrado(NombreArchivoNuevo, cifrado);
         }
         catch (Exception e) {
 
@@ -72,13 +75,32 @@ public class zigZag {
 
     public void desCifrar(String cifrado, int levels){
         char [] aCifrado = cifrado.toCharArray();
+        String outPut = "";
         lvls = levels;
         tOla = (levels-1)*2;
         nOlas = nOlas = aCifrado.length%tOla;
         tBloque = nOlas * 2;
+        nBloques = (aCifrado.length - cresta - cola)%tBloque;
         cresta = cola = nOlas;
+        char [] aCresta = new char[cresta];
+        char [] aCola = new char[cola];
+        ArrayList<Character> aBloque = new ArrayList<>();
         for (int i = 0; i < aCifrado.length; i++){
+            if (i < cresta){
+                aCresta[i] = aCifrado[i];
+            }
+            else if(i >= cresta && i < (aCifrado.length-cola)){
+                aBloque.add(aCifrado[i]);
+            }
+            else {
+                aCola[i] = aCifrado[i];
+            }
+        }
+        for (int j = 0; j < cresta; j++) {
+            outPut = outPut + aCresta[j];
+            for (int z = 0; z < nBloques; z++){
 
+            }
         }
     }
 
@@ -94,7 +116,7 @@ public class zigZag {
         if (!dirCre) {
             throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
         }
-        File archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".huff");
+        File archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".cif");
         if (!archivoEscribir.createNewFile())
             throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
