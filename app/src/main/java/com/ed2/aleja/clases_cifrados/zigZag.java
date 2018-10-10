@@ -1,4 +1,4 @@
-package com.ed2.aleja.cifrado;
+package com.ed2.aleja.clases_cifrados;
 
 import android.content.Context;
 import android.os.Environment;
@@ -27,12 +27,14 @@ public class zigZag {
     public String outPut = "";
     public String ubicacionArchivo = "";
     public ArrayList<Character> charList;
+    private boolean SobreescribirArchivo;
 
-    public zigZag(String text, Context contextApp, int levels){
+    public zigZag(String text, Context contextApp, int levels, boolean sobreescribir){
         Context = contextApp;
         TextArchivo = text;
         lvls = levels;
         tOla = (levels-1)*2;
+        SobreescribirArchivo = sobreescribir;
     }
 
     public void cifrar (){
@@ -116,9 +118,22 @@ public class zigZag {
         if (!dirCre) {
             throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
         }
-        File archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".cif");
-        if (!archivoEscribir.createNewFile())
-            throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
+        File archivoEscribir = null;
+        if (!SobreescribirArchivo) {
+            boolean creado = false;
+            int numeroArchivo = 1;
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".cif");
+            creado = archivoEscribir.createNewFile();
+            while (!creado) {
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + ".cif");
+                creado = archivoEscribir.createNewFile();
+            }
+        } else {
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".cif");
+            archivoEscribir.delete();
+            if (!archivoEscribir.createNewFile())
+                throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
+        }
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
         fileOutputStream.write(contenido.getBytes());
         fileOutputStream.close();
@@ -139,7 +154,18 @@ public class zigZag {
         if (!dirCre) {
             throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
         }
-        File archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo);
+        File archivoEscribir = null;
+        if (!SobreescribirArchivo) {
+            boolean creado = false;
+            int numeroArchivo = 1;
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo);
+            creado = archivoEscribir.createNewFile();
+            while (!creado) {
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + ".cif");
+                creado = archivoEscribir.createNewFile();
+            }
+        }
+        archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo);
         if (archivoEscribir.exists()) {
             throw new Exception("El archivo " + nombreArchivo + " ya existe");
         } else {

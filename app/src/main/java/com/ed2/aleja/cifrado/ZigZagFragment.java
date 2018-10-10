@@ -1,11 +1,17 @@
 package com.ed2.aleja.cifrado;
 
 import android.app.Activity;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,13 +25,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.ed2.aleja.clases_cifrados.zigZag;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
+import java.net.URISyntaxException;
+
+import static android.content.ContentValues.TAG;
 
 public class ZigZagFragment extends Fragment {
 
@@ -45,7 +54,9 @@ public class ZigZagFragment extends Fragment {
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
             directorio = new File(Environment.getExternalStorageDirectory() + "/CifradosEstructuras/");
         else
-            directorio = new File(rootView.getContext().getFilesDir() + "/DescifradosEstructuras/");
+            directorio = new File(rootView.getContext().getFilesDir() + "/CifradosEstructuras/");
+        if (!directorio.exists())
+            directorio.mkdir();
         TextView mostrarInformacionDirectorio = (TextView) rootView.findViewById(R.id.info_carpeta_destino_cifrar_zigzag);
         UBICACION_GUARDAR = directorio.getAbsolutePath();
         mostrarInformacionDirectorio.setText(getString(R.string.no_sobre) + " " + UBICACION_GUARDAR + "/");
@@ -70,8 +81,10 @@ public class ZigZagFragment extends Fragment {
                 String textoMostrar = "";
                 if (sobreescribirArchivo.isChecked()) {
                     textoMostrar = getString(R.string.si_sobre);
+                    SobreescribirArchivo = true;
                 } else {
                     textoMostrar = getString(R.string.no_sobre);
+                    SobreescribirArchivo = false;
                 }
                 mostrarInformacionDirectorio.setText(textoMostrar + " " + UBICACION_GUARDAR  + "/");
             }
@@ -82,13 +95,15 @@ public class ZigZagFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-<<<<<<< HEAD
-                    // Poner el cifrado aquí
-
-=======
-                    zigZag encriptador = new zigZag(TextoCifrar, getContext(), 6);
-                    encriptador.cifrar();
->>>>>>> 742288e4e61206185dd773b03d71a8be2562b909
+                    EditText nivelesSeparacion = (EditText) rootView.findViewById(R.id.niveles_separacion_cifrar_zigzag);
+                    if (!nivelesSeparacion.getText().toString().equals("")) {
+                        String extension = UBICACION_ARCHIVO_CIFRAR.substring(UBICACION_ARCHIVO_CIFRAR.lastIndexOf('.') + 1);
+                        int niveles = Integer.parseInt(nivelesSeparacion.getText().toString());
+                        zigZag encriptador = new zigZag(extension + "|" + TextoCifrar, getContext(), niveles, SobreescribirArchivo);
+                        encriptador.cifrar();
+                    } else {
+                        Toast.makeText(rootView.getContext(), "Debe ingresar el número de niveles para cifrar", Toast.LENGTH_LONG).show();
+                    }
                 } catch (Exception ex) {
                     Toast.makeText(rootView.getContext(), "Hubo un error cifrando el archivo", Toast.LENGTH_LONG).show();
                 }
@@ -103,7 +118,7 @@ public class ZigZagFragment extends Fragment {
             try {
                 EditText ubicacionArchivoCifrar = (EditText) rootView.findViewById(R.id.ubicacion_archivo_cifrar_zigzag);
                 Uri uri = resultData.getData();
-                UBICACION_ARCHIVO_CIFRAR = uri.getPath();
+                UBICACION_ARCHIVO_CIFRAR = obtenerNombreArchivo(uri);
 
                 ubicacionArchivoCifrar.setText(UBICACION_ARCHIVO_CIFRAR);
                 InputStream inputStream = rootView.getContext().getContentResolver().openInputStream(uri);
@@ -115,11 +130,31 @@ public class ZigZagFragment extends Fragment {
                 }
                 TextoCifrar = textoArchivo;
             } catch (IOException ioex) {
+                ioex.printStackTrace();
                 Toast.makeText(rootView.getContext(), "Hubo un error leyendo el archivo", Toast.LENGTH_SHORT).show();
             }
             Toast.makeText(rootView.getContext(), "El archivo se cargó correctamente", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(rootView.getContext(), "No se seleccionón ningún archivo", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    public String obtenerNombreArchivo(Uri uri) {
+        String nombre = "";
+        File archivo = new File(uri.toString());
+        Cursor cursor = null;
+        if (uri.toString().startsWith("content://")) {
+            try {
+                cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+                if (cursor != null && cursor.moveToFirst()) {
+                    nombre = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                }
+            } finally {
+                cursor.close();
+            }
+        } else if (uri.toString().startsWith("file://")) {
+            nombre = archivo.getAbsolutePath().toString();
+        }
+        return nombre;
     }
 }
