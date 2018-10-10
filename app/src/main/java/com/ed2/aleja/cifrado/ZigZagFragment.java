@@ -81,8 +81,8 @@ public class ZigZagFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 try {
-                    // Poner el cifrado aquí
-                    
+                    zigZag encriptador = new zigZag(TextoCifrar, getContext(), 6);
+                    encriptador.cifrar();
                 } catch (Exception ex) {
                     Toast.makeText(rootView.getContext(), "Hubo un error cifrando el archivo", Toast.LENGTH_LONG).show();
                 }
