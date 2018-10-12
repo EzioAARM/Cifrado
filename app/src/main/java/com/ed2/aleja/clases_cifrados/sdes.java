@@ -16,16 +16,42 @@ public class sdes {
     private boolean SobreescribirArchivo;
     private String NombreArchivo;
 
-    public sdes(String textCifrar, String key, Context contexto, boolean sobreescribir, String nombre) {
+    public sdes(Context contexto, boolean sobreescribir, String nombre) {
         Contexto = contexto;
         SobreescribirArchivo = sobreescribir;
-        Key = key;
-        TextoParaCifrar = textCifrar;
         NombreArchivo = nombre;
     }
 
-    public void Cifrar() {
+    public void Cifrar(String textCifrar, String key) {
+        Key = key;
+        TextoParaCifrar = textCifrar;
+        /* Creación de las llaves */
+        String llaveInicial = Integer.toBinaryString(Integer.parseInt(Key));
+        if (llaveInicial.length() < 10) {
+            for (int i = 0; i < 10 - llaveInicial.length(); i++) {
+                llaveInicial = "0" + llaveInicial;
+            }
+        }
+        boolean[] llave = convertirString(llaveInicial);
+        llave = Permutacion(llave);
+        boolean[] llave1 = {llave[0], llave[1], llave[2], llave[3], llave[4]};
+        boolean[] llave2 = {llave[5], llave[6], llave[7], llave[8], llave[9]};
 
+        llave1 = leftShift(llave1, 1);
+        llave2 = leftShift(llave2, 1);
+        llave = ConcatenarArreglos(llave1, llave2);
+        boolean[] llaveFinal1 = SeleccionarYPermutar(llave);
+
+        llave1 = leftShift(llave1, 2);
+        llave2 = leftShift(llave2, 2);
+        llave = ConcatenarArreglos(llave1, llave2);
+        boolean[] llaveFinal2 = SeleccionarYPermutar(llave);
+
+
+        /* Fin de creación de las llaves */
+         /* Inicio del cifrado*/
+
+        /* Fin del cifrado */
     }
 
     private boolean[] PermutacionInicial(boolean[] byteViejo){
@@ -114,5 +140,17 @@ public class sdes {
             binario += arreglo[i] ? "1" : "0";
         }
         return binario;
+    }
+
+    private boolean[] ConcatenarArreglos(boolean[] arreglo1, boolean[] arreglo2) {
+        boolean[] arregloNuevo = new boolean[arreglo1.length + arreglo2.length];
+        int i = 0;
+        for (i = 0; i < arreglo1.length; i++) {
+            arregloNuevo[i] = arreglo1[i];
+        }
+        for (i = i; i < arreglo2.length; i++) {
+            arregloNuevo[i] = arreglo2[i - arreglo1.length - 1];
+        }
+        return arregloNuevo;
     }
 }
