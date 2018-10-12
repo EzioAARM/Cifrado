@@ -2,6 +2,7 @@ package com.ed2.aleja.clases_cifrados;
 
 import android.content.Context;
 import android.os.Environment;
+import android.widget.Toast;
 
 import java.io.Console;
 import java.io.File;
@@ -74,7 +75,7 @@ public class zigZag {
             escribirArchivoCifrado(NombreArchivoNuevo, cifrado);
         }
         catch (Exception e) {
-
+            Toast.makeText(Context, e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
 

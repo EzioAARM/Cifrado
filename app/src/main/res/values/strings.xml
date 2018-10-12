@@ -2,6 +2,7 @@
     <string name="app_name">Cifrado</string>
     <string-array name="Cifrados">
         <item>Zig-Zag</item>
+        <item>S-DES</item>
     </string-array>
     <string name="cifrar">Cifrar</string>
     <string name="cifrados">Cifrados</string>

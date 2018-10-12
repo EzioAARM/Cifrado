@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SdesFragment">
+
+    <Button
+        android:id="@+id/examinar_cifrar_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        style="@style/StyleButton"
+        android:text="Examinar..." />
+
+    <EditText
+        android:id="@+id/ubicacion_archivo_cifrar_sdes"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/examinar_cifrar_sdes"
+        android:editable="false"
+        android:hint="@string/ubicacion"/>
+
+    <CheckBox
+        android:id="@+id/sobreescribir_cifrar_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ubicacion_archivo_cifrar_sdes"
+        android:text="@string/sobreescribir"/>
+
+    <TextView
+        android:id="@+id/info_carpeta_destino_cifrar_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sobreescribir_cifrar_sdes"
+        android:text="@string/no_sobre"/>
+
+    <EditText
+        android:id="@+id/contrasenia_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_below="@id/info_carpeta_destino_cifrar_sdes"
+        android:layout_centerHorizontal="true"
+        android:hint="Contraseña"
+        android:ems="10"
+        android:inputType="numberPassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/contrasenia_sdes"
+        android:layout_alignLeft="@id/contrasenia_sdes"
+        android:fontFamily="@font/robotothin"
+        android:textSize="13sp"
+        android:textAlignment="center"
+        android:text="El número debe estar entre 0 y 1023"/>
+
+    <Button
+        android:id="@+id/cifrar_cifrar"
+        style="@style/StyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="@string/cifrar" />
+
+</RelativeLayout>

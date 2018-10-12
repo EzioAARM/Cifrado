@@ -24,10 +24,15 @@ public class CifrarFragment extends Fragment {
         metodosCifrado.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                FragmentManager fragmentManager;
                 switch (position) {
                     case 0:
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.contenedor_cifrados, new ZigZagFragment()).commit();
+                        break;
+                    case 1:
+                        fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.contenedor_cifrados, new SdesFragment()).commit();
                         break;
                 }
             }
