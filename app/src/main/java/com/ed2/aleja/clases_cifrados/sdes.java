@@ -27,7 +27,7 @@ public class sdes {
         NombreArchivo = nombre;
     }
 
-    public void Cifrar(String textCifrar, String key) throws Exception {
+    public void Cifrar(String textCifrar, String key, String extension) throws Exception {
         Key = key;
         TextoParaCifrar = textCifrar;
         /* Creación de las llaves */
@@ -63,6 +63,8 @@ public class sdes {
         boolean[] arregloActualP2 = new boolean[4];
         String actualBinario = "";
         String binarioCifrado = "";
+        boolean[] c1;
+        boolean[] c2;
         TextoCifrado = "";
         for (int i = 0; i < longitud; i++) {
             actualBinario = Integer.toBinaryString((int) TextoParaCifrar.charAt(i));
@@ -77,18 +79,19 @@ public class sdes {
                     break;
             }
             arregloByteActual = convertirString(actualBinario);
-
+            arregloByteActual = PermutacionInicial(arregloByteActual);
             arregloActualP1[0] = arregloByteActual[0]; arregloActualP1[1] = arregloByteActual[1]; arregloActualP1[2] = arregloByteActual[2]; arregloActualP1[3] = arregloByteActual[3];
-            binarioCifrado = Fk(arregloActualP1, llaveFinal1);
+            c1 = Fk(arregloActualP1, llaveFinal1);
             arregloActualP2[0] = arregloByteActual[4]; arregloActualP2[1] = arregloByteActual[5]; arregloActualP2[2] = arregloByteActual[6]; arregloActualP2[3] = arregloByteActual[7];
-            binarioCifrado += Fk(arregloActualP2, llaveFinal2);
+            c2 = Fk(arregloActualP2, llaveFinal2);
+            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c1, c2)));
             TextoCifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
         }
-        escribirArchivoCifrado(NombreArchivo, TextoCifrado);
+        escribirArchivoCifrado(NombreArchivo, extension + "|" + TextoCifrado);
         /* Fin del cifrado */
     }
 
-    private String Fk(boolean[] arreglo, boolean[] llave) {
+    private boolean[] Fk(boolean[] arreglo, boolean[] llave) {
         boolean[] arregloParaSbox1 = new boolean[4];
         boolean[] arregloParaSbox2 = new boolean[4];
         boolean[] arregloDespuesSbox1;
@@ -99,7 +102,7 @@ public class sdes {
         arregloParaSbox2[0] = arreglo[4]; arregloParaSbox2[1] = arreglo[5]; arregloParaSbox2[2] = arreglo[6]; arregloParaSbox2[3] = arreglo[7];
         arregloDespuesSbox1 = convertirString(buscarEnSbox(arregloParaSbox1, sBox1));
         arregloDespuesSbox2 = convertirString(buscarEnSbox(arregloParaSbox2, sBox2));
-        return convertirBoolean(ConcatenarArreglos(arregloDespuesSbox1, arregloDespuesSbox2));
+        return ConcatenarArreglos(arregloDespuesSbox1, arregloDespuesSbox2);
     }
 
     private boolean[] XOR(boolean[] arreglo1, boolean[] arreglo2) {

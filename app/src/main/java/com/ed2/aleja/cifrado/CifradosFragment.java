@@ -47,7 +47,7 @@ public class CifradosFragment extends Fragment {
                 String[] separados = null;
                 while (i < listadoCifrados.size()) {
                     separados = listadoCifrados.get(i).split("\\|");
-                    listadoItems.add(new ListViewItem(separados[0], separados[1], separados[2]));
+                    listadoItems.add(0, new ListViewItem(separados[0], separados[1], separados[2]));
                     i++;
                 }
                 lector.close();

@@ -96,7 +96,7 @@ public class SdesFragment extends Fragment {
 
                         sdes Sdes = new sdes(rootView.getContext(), SobreescribirArchivo, nombreArchivo);
                         EditText contra = (EditText) rootView.findViewById(R.id.contrasenia_sdes);
-                        Sdes.Cifrar(TextoCifrar, contra.getText().toString());
+                        Sdes.Cifrar(TextoCifrar, contra.getText().toString(), extension);
 
                         FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
                         OutputStreamWriter escritor = new OutputStreamWriter(output);
