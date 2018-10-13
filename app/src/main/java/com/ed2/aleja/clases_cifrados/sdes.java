@@ -1,6 +1,11 @@
 package com.ed2.aleja.clases_cifrados;
 
 import android.content.Context;
+import android.os.Environment;
+import android.util.Log;
+
+import java.io.File;
+import java.io.FileOutputStream;
 
 public class sdes {
     private int[] VectorDePermutacion10 = {4, 9, 3, 2, 6, 5, 7, 1, 8, 0};
@@ -22,7 +27,7 @@ public class sdes {
         NombreArchivo = nombre;
     }
 
-    public void Cifrar(String textCifrar, String key) {
+    public void Cifrar(String textCifrar, String key) throws Exception {
         Key = key;
         TextoParaCifrar = textCifrar;
         /* Creación de las llaves */
@@ -58,13 +63,15 @@ public class sdes {
         boolean[] arregloActualP2 = new boolean[4];
         String actualBinario = "";
         String binarioCifrado = "";
+        TextoCifrado = "";
         for (int i = 0; i < longitud; i++) {
             actualBinario = Integer.toBinaryString((int) TextoParaCifrar.charAt(i));
             switch (actualBinario.length()) {
                 case 8:
                     break;
                 default:
-                    for (int contadorCeros = 0; contadorCeros < 10 - actualBinario.length() - 1; contadorCeros++) {
+                    int cont = 8 - actualBinario.length();
+                    for (int contadorCeros = 0; contadorCeros < cont; contadorCeros++) {
                         actualBinario = "0" + actualBinario;
                     }
                     break;
@@ -75,8 +82,9 @@ public class sdes {
             binarioCifrado = Fk(arregloActualP1, llaveFinal1);
             arregloActualP2[0] = arregloByteActual[4]; arregloActualP2[1] = arregloByteActual[5]; arregloActualP2[2] = arregloByteActual[6]; arregloActualP2[3] = arregloByteActual[7];
             binarioCifrado += Fk(arregloActualP2, llaveFinal2);
-            TextoCifrado += Integer.toString(Integer.parseInt(binarioCifrado), 2);
+            TextoCifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
         }
+        escribirArchivoCifrado(NombreArchivo, TextoCifrado);
         /* Fin del cifrado */
     }
 
@@ -168,9 +176,9 @@ public class sdes {
 
     private String buscarEnSbox(boolean[] arreglo, String[][] sbox) {
         boolean[] n1 = {arreglo[0], arreglo[3]};
-        int fila = Integer.parseInt(Integer.toString(Integer.parseInt(convertirBoolean(n1)), 2));
+        int fila = Integer.parseInt(convertirBoolean(n1), 2);
         boolean[] n2 = {arreglo[1], arreglo[2]};
-        int columna = Integer.parseInt(Integer.toString(Integer.parseInt(convertirBoolean(n2)), 2));
+        int columna = Integer.parseInt(convertirBoolean(n2), 2);
         return sbox[fila][columna];
     }
 
@@ -200,5 +208,39 @@ public class sdes {
             arregloNuevo[j] = arreglo2[j - arreglo1.length];
         }
         return arregloNuevo;
+    }
+
+    private boolean escribirArchivoCifrado(String nombreArchivo, String contenido) throws Exception {
+        File directorio = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            directorio = new File(Environment.getExternalStorageDirectory() + "/CifradoEstructuras/");
+        else
+            directorio = new File(Contexto.getFilesDir() + "/CifradoEstructuras/");
+        boolean dirCre = true;
+        if (!directorio.exists())
+            dirCre = directorio.mkdirs();
+        if (!dirCre) {
+            throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
+        }
+        File archivoEscribir = null;
+        if (!SobreescribirArchivo) {
+            boolean creado = false;
+            int numeroArchivo = 1;
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".scif");
+            creado = archivoEscribir.createNewFile();
+            while (!creado) {
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + ".scif");
+                creado = archivoEscribir.createNewFile();
+            }
+        } else {
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + ".scif");
+            archivoEscribir.delete();
+            if (!archivoEscribir.createNewFile())
+                throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
+        fileOutputStream.write(contenido.getBytes());
+        fileOutputStream.close();
+        return true;
     }
 }

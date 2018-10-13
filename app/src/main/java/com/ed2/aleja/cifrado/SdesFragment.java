@@ -98,15 +98,16 @@ public class SdesFragment extends Fragment {
                         EditText contra = (EditText) rootView.findViewById(R.id.contrasenia_sdes);
                         Sdes.Cifrar(TextoCifrar, contra.getText().toString());
 
-                        /*FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
+                        FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
                         OutputStreamWriter escritor = new OutputStreamWriter(output);
                         escritor.append(UBICACION_ARCHIVO_CIFRAR + "|" + UBICACION_GUARDAR + "/" + UBICACION_ARCHIVO_CIFRAR + "|" + "S-DES\n");
-                        escritor.close();*/
+                        escritor.close();
                         Toast.makeText(rootView.getContext(), "El archivo se cifró correctamente", Toast.LENGTH_LONG).show();
                     } else {
                         Toast.makeText(rootView.getContext(), "Debe ingresar el número de niveles para cifrar", Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     Toast.makeText(rootView.getContext(), "Hubo un error cifrando el archivo", Toast.LENGTH_LONG).show();
                 }
             }
