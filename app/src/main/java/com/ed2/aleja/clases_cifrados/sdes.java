@@ -6,12 +6,12 @@ public class sdes {
     private int[] VectorDePermutacion10 = {4, 9, 3, 2, 6, 5, 7, 1, 8, 0};
     private int[] SeleccionarPermutar = {9, 7, 5, 3, 1, 4, 2, 6};
     private int[] VectorDePermutacion8 = {3, 5, 7, 0, 4, 2, 6, 1};
-    private int[] VectorPermutar = {2, 4, 1, 2};
-    private int[] VectorDePermutacion4 = {4, 1, 3, 2};
-    private int[] VectorDePermutacion4P2 = {3, 2, 4, 1};
+    private int[] VectorPermutar = {2, 0, 1, 3};
+    private int[] VectorDePermutacion4 = {0, 1, 3, 2};
+    private int[] VectorDePermutacion4P2 = {3, 2, 0, 1};
     private String[][] sBox1 = {{"01", "00", "11", "10"}, {"11", "10", "01", "00"}, {"00", "10", "01", "11"}, {"11", "01", "11", "01"}};
     private String[][] sBox2 = {{"00", "01", "10", "11"}, {"10", "00", "01", "11"}, {"11", "00", "01", "00"}, {"10", "01", "00", "11"}};
-    private String TextoParaCifrar, Key, Key1, Key2, TextoCifrado;
+    private String TextoParaCifrar, Key, TextoCifrado;
     private Context Contexto;
     private boolean SobreescribirArchivo;
     private String NombreArchivo;
@@ -26,6 +26,7 @@ public class sdes {
         Key = key;
         TextoParaCifrar = textCifrar;
         /* Creación de las llaves */
+
         String llaveInicial = Integer.toBinaryString(Integer.parseInt(Key));
         if (llaveInicial.length() < 10) {
             for (int i = 0; i < 10 - llaveInicial.length(); i++) {
@@ -51,7 +52,54 @@ public class sdes {
         /* Fin de creación de las llaves */
          /* Inicio del cifrado*/
 
+        int longitud = TextoParaCifrar.length();
+        boolean[] arregloByteActual = null;
+        boolean[] arregloActualP1 = new boolean[4];
+        boolean[] arregloActualP2 = new boolean[4];
+        String actualBinario = "";
+        String binarioCifrado = "";
+        for (int i = 0; i < longitud; i++) {
+            actualBinario = Integer.toBinaryString((int) TextoParaCifrar.charAt(i));
+            switch (actualBinario.length()) {
+                case 8:
+                    break;
+                default:
+                    for (int contadorCeros = 0; contadorCeros < 10 - actualBinario.length() - 1; contadorCeros++) {
+                        actualBinario = "0" + actualBinario;
+                    }
+                    break;
+            }
+            arregloByteActual = convertirString(actualBinario);
+
+            arregloActualP1[0] = arregloByteActual[0]; arregloActualP1[1] = arregloByteActual[1]; arregloActualP1[2] = arregloByteActual[2]; arregloActualP1[3] = arregloByteActual[3];
+            binarioCifrado = Fk(arregloActualP1, llaveFinal1);
+            arregloActualP2[0] = arregloByteActual[4]; arregloActualP2[1] = arregloByteActual[5]; arregloActualP2[2] = arregloByteActual[6]; arregloActualP2[3] = arregloByteActual[7];
+            binarioCifrado += Fk(arregloActualP2, llaveFinal2);
+            TextoCifrado += Integer.toString(Integer.parseInt(binarioCifrado), 2);
+        }
         /* Fin del cifrado */
+    }
+
+    private String Fk(boolean[] arreglo, boolean[] llave) {
+        boolean[] arregloParaSbox1 = new boolean[4];
+        boolean[] arregloParaSbox2 = new boolean[4];
+        boolean[] arregloDespuesSbox1;
+        boolean[] arregloDespuesSbox2;
+        arreglo = ExpandirPermutar(arreglo);
+        arreglo = XOR(arreglo, llave);
+        arregloParaSbox1[0] = arreglo[0]; arregloParaSbox1[1] = arreglo[1]; arregloParaSbox1[2] = arreglo[2]; arregloParaSbox1[3] = arreglo[3];
+        arregloParaSbox2[0] = arreglo[4]; arregloParaSbox2[1] = arreglo[5]; arregloParaSbox2[2] = arreglo[6]; arregloParaSbox2[3] = arreglo[7];
+        arregloDespuesSbox1 = convertirString(buscarEnSbox(arregloParaSbox1, sBox1));
+        arregloDespuesSbox2 = convertirString(buscarEnSbox(arregloParaSbox2, sBox2));
+        return convertirBoolean(ConcatenarArreglos(arregloDespuesSbox1, arregloDespuesSbox2));
+    }
+
+    private boolean[] XOR(boolean[] arreglo1, boolean[] arreglo2) {
+        boolean[] arregloNuevo = new boolean[arreglo1.length];
+        for (int i = 0; i < arregloNuevo.length; i++) {
+            arregloNuevo[i] = arreglo1[i] ^ arreglo2[i];
+        }
+        return arregloNuevo;
     }
 
     private boolean[] PermutacionInicial(boolean[] byteViejo){
@@ -98,7 +146,7 @@ public class sdes {
     }
 
     private boolean[] Permutacion(boolean[] arreglo) {
-        boolean[] byteNuevo = new boolean[8];
+        boolean[] byteNuevo = new boolean[arreglo.length];
         for (int i = 0; i < byteNuevo.length; i++) {
             byteNuevo[i] = arreglo[VectorDePermutacion10[i]];
         }
@@ -120,9 +168,9 @@ public class sdes {
 
     private String buscarEnSbox(boolean[] arreglo, String[][] sbox) {
         boolean[] n1 = {arreglo[0], arreglo[3]};
-        int fila = Integer.parseInt(convertirBoolean(n1));
+        int fila = Integer.parseInt(Integer.toString(Integer.parseInt(convertirBoolean(n1)), 2));
         boolean[] n2 = {arreglo[1], arreglo[2]};
-        int columna = Integer.parseInt(convertirBoolean(n2));
+        int columna = Integer.parseInt(Integer.toString(Integer.parseInt(convertirBoolean(n2)), 2));
         return sbox[fila][columna];
     }
 
@@ -148,8 +196,8 @@ public class sdes {
         for (i = 0; i < arreglo1.length; i++) {
             arregloNuevo[i] = arreglo1[i];
         }
-        for (i = i; i < arreglo2.length; i++) {
-            arregloNuevo[i] = arreglo2[i - arreglo1.length - 1];
+        for (int j = i; j < arregloNuevo.length; j++) {
+            arregloNuevo[j] = arreglo2[j - arreglo1.length];
         }
         return arregloNuevo;
     }
