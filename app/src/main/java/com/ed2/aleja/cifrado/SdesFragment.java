@@ -100,7 +100,7 @@ public class SdesFragment extends Fragment {
 
                         FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
                         OutputStreamWriter escritor = new OutputStreamWriter(output);
-                        escritor.append(UBICACION_ARCHIVO_CIFRAR + "|" + UBICACION_GUARDAR + "/" + UBICACION_ARCHIVO_CIFRAR + "|" + "S-DES\n");
+                        escritor.append(Sdes.NombreArchivo + "|" + UBICACION_GUARDAR + "/" + Sdes.NombreArchivo + "|" + "S-DES\n");
                         escritor.close();
                         Toast.makeText(rootView.getContext(), "El archivo se cifró correctamente", Toast.LENGTH_LONG).show();
                     } else {

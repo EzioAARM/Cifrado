@@ -19,7 +19,7 @@ public class sdes {
     private String TextoParaCifrar, Key, TextoCifrado, TextoDescifrado;
     private Context Contexto;
     private boolean SobreescribirArchivo;
-    private String NombreArchivo;
+    public String NombreArchivo;
 
     public sdes(Context contexto, boolean sobreescribir, String nombre) {
         Contexto = contexto;
@@ -34,7 +34,8 @@ public class sdes {
 
         String llaveInicial = Integer.toBinaryString(Integer.parseInt(Key));
         if (llaveInicial.length() < 10) {
-            for (int i = 0; i < 10 - llaveInicial.length(); i++) {
+            int tamanio = 10 - llaveInicial.length();
+            for (int i = 0; i < tamanio; i++) {
                 llaveInicial = "0" + llaveInicial;
             }
         }
@@ -63,6 +64,7 @@ public class sdes {
         String binarioCifrado = "";
         boolean[] c1;
         boolean[] c2;
+        boolean[] arregloNuevo;
         boolean[] ultimosCuatro = new boolean[4];
         TextoCifrado = "";
         for (int i = 0; i < longitud; i++) {
@@ -81,9 +83,9 @@ public class sdes {
             arregloByteActual = PermutacionInicial(arregloByteActual);
             ultimosCuatro[0] = arregloByteActual[4]; ultimosCuatro[1] = arregloByteActual[5]; ultimosCuatro[2] = arregloByteActual[6]; ultimosCuatro[3] = arregloByteActual[7];
             c1 = Fk(arregloByteActual, llaveFinal1);
-            arregloByteActual = ConcatenarArreglos(c1, ultimosCuatro);
-            c2 = Fk(arregloByteActual, llaveFinal2);
-            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, ultimosCuatro)));
+            arregloNuevo = ConcatenarArreglos(ultimosCuatro, c1);
+            c2 = Fk(arregloNuevo, llaveFinal2);
+            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, c1)));
             TextoCifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
         }
         escribirArchivoCifrado(NombreArchivo, extension + "|" + TextoCifrado);
@@ -107,7 +109,8 @@ public class sdes {
 
         String llaveInicial = Integer.toBinaryString(Integer.parseInt(Key));
         if (llaveInicial.length() < 10) {
-            for (int i = 0; i < 10 - llaveInicial.length(); i++) {
+            int tamanio = 10 - llaveInicial.length();
+            for (int i = 0; i < tamanio; i++) {
                 llaveInicial = "0" + llaveInicial;
             }
         }
@@ -136,6 +139,7 @@ public class sdes {
         String binarioCifrado = "";
         boolean[] c1;
         boolean[] c2;
+        boolean[] arregloNuevo;
         boolean[] ultimosCuatro = new boolean[4];
         TextoDescifrado = "";
         for (int i = 0; i < longitud; i++) {
@@ -154,12 +158,11 @@ public class sdes {
             arregloByteActual = PermutacionInicial(arregloByteActual);
             ultimosCuatro[0] = arregloByteActual[4]; ultimosCuatro[1] = arregloByteActual[5]; ultimosCuatro[2] = arregloByteActual[6]; ultimosCuatro[3] = arregloByteActual[7];
             c1 = Fk(arregloByteActual, llaveFinal2);
-            arregloByteActual = ConcatenarArreglos(c1, ultimosCuatro);
-            c2 = Fk(arregloByteActual, llaveFinal1);
-            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, ultimosCuatro)));
+            arregloNuevo = ConcatenarArreglos(ultimosCuatro, c1);
+            c2 = Fk(arregloNuevo, llaveFinal1);
+            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, c1)));
             TextoDescifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
         }
-        TextoCifrado = "";
         escribirArchivoDescifrado(NombreArchivo, TextoDescifrado, extension);
         /* Fin del cifrado */
     }
@@ -173,8 +176,8 @@ public class sdes {
         boolean[] ultimos4Sbox = {luegoDelXor[4], luegoDelXor[5], luegoDelXor[6], luegoDelXor[7]};
         boolean[] binSboxes = convertirString(buscarEnSbox(primeros4Sbox, sBox1) + buscarEnSbox(ultimos4Sbox, sBox2));
         binSboxes = Permutar(binSboxes);
-        boolean[] binFinal = XOR(primeros4, binSboxes);
-        return binFinal;
+        binSboxes = XOR(primeros4, binSboxes);
+        return binSboxes;
     }
 
     private boolean[] XOR(boolean[] arreglo1, boolean[] arreglo2) {
@@ -196,7 +199,7 @@ public class sdes {
     private boolean[] PermutacionInversa(boolean[] byteViejo) {
         boolean[] byteNuevo = new boolean[byteViejo.length];
         for (int i = 0; i < byteNuevo.length; i++) {
-            byteNuevo[i] = byteViejo[VectorDePermutacion8[i]];
+            byteNuevo[VectorDePermutacion8[i]] = byteViejo[i];
         }
         return byteNuevo;
     }
@@ -313,6 +316,7 @@ public class sdes {
             if (!archivoEscribir.createNewFile())
                 throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
         }
+        NombreArchivo = archivoEscribir.getName();
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
         fileOutputStream.write(contenido.getBytes());
         fileOutputStream.close();
@@ -335,6 +339,8 @@ public class sdes {
         if (!SobreescribirArchivo) {
             boolean creado = false;
             int numeroArchivo = 1;
+            int posExtension = nombreArchivo.lastIndexOf('.');
+            nombreArchivo = nombreArchivo.substring(0, posExtension);
             archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
             creado = archivoEscribir.createNewFile();
             while (!creado) {
@@ -347,15 +353,6 @@ public class sdes {
             archivoEscribir.delete();
             if (!archivoEscribir.createNewFile())
                 throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
-        }
-        boolean eliminoExtension = false;
-        int i = 0;
-        while (!eliminoExtension) {
-            if (contenido.charAt(i) == '|') {
-                contenido = contenido.substring(i + 1);
-                eliminoExtension = true;
-            }
-            i++;
         }
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
         fileOutputStream.write(contenido.getBytes());
