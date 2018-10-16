@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=""    >
+
+    <Button
+        android:id="@+id/descifrar_descifrar"
+        style="@style/StyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:text="Descifrar" />
+
+    <EditText
+        android:id="@+id/contrasenia_sdes_descifrar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:ems="10"
+        android:inputType="numberPassword"
+        android:hint="Contraseña"/>
+
+    <CheckBox
+        android:id="@+id/sobreescribir_descifrar_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/contrasenia_sdes_descifrar"
+        android:text="@string/sobreescribir" />
+
+    <TextView
+        android:id="@+id/info_carpeta_destino_descifrar_sdes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sobreescribir_descifrar_sdes"
+        android:text="@string/no_sobre" />
+
+</RelativeLayout>

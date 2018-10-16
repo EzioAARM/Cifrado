@@ -65,15 +65,26 @@ public class DescifrarFragment extends Fragment {
                 while ((caracter = lector.read()) != -1) {
                     textoArchivo += (char) caracter;
                 }
+                FragmentManager fragmentManager;
+                Bundle argumentos;
                 switch (extension) {
                     case ".cif":
-                        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager = getActivity().getSupportFragmentManager();
                         ZigZagDescifrarFragment zigZagDescifrarFragment = new ZigZagDescifrarFragment();
-                        Bundle argumentos = new Bundle();
+                        argumentos = new Bundle();
                         argumentos.putSerializable("textoDescifrar", textoArchivo);
                         argumentos.putSerializable("nombreArchivo", UBICACION_ARCHIVO_DESCIFRAR);
                         zigZagDescifrarFragment.setArguments(argumentos);
                         fragmentManager.beginTransaction().replace(R.id.contenedor_descifrados, zigZagDescifrarFragment).commit();
+                        break;
+                    case ".scif":
+                        fragmentManager = getActivity().getSupportFragmentManager();
+                        SdesDescifrarFragment sdesDescifrarFragment = new SdesDescifrarFragment();
+                        argumentos = new Bundle();
+                        argumentos.putSerializable("textoDescifrar", textoArchivo);
+                        argumentos.putSerializable("nombreArchivo", UBICACION_ARCHIVO_DESCIFRAR);
+                        sdesDescifrarFragment.setArguments(argumentos);
+                        fragmentManager.beginTransaction().replace(R.id.contenedor_descifrados, sdesDescifrarFragment).commit();
                         break;
                     default:
                         Toast.makeText(rootView.getContext(), "Debe seleccionar un archivo de extensión .cif", Toast.LENGTH_LONG).show();

@@ -16,7 +16,7 @@ public class sdes {
     private int[] VectorDePermutacion4P2 = {3, 2, 0, 1};
     private String[][] sBox1 = {{"01", "00", "11", "10"}, {"11", "10", "01", "00"}, {"00", "10", "01", "11"}, {"11", "01", "11", "01"}};
     private String[][] sBox2 = {{"00", "01", "10", "11"}, {"10", "00", "01", "11"}, {"11", "00", "01", "00"}, {"10", "01", "00", "11"}};
-    private String TextoParaCifrar, Key, TextoCifrado;
+    private String TextoParaCifrar, Key, TextoCifrado, TextoDescifrado;
     private Context Contexto;
     private boolean SobreescribirArchivo;
     private String NombreArchivo;
@@ -59,12 +59,11 @@ public class sdes {
 
         int longitud = TextoParaCifrar.length();
         boolean[] arregloByteActual = null;
-        boolean[] arregloActualP1 = new boolean[4];
-        boolean[] arregloActualP2 = new boolean[4];
         String actualBinario = "";
         String binarioCifrado = "";
         boolean[] c1;
         boolean[] c2;
+        boolean[] ultimosCuatro = new boolean[4];
         TextoCifrado = "";
         for (int i = 0; i < longitud; i++) {
             actualBinario = Integer.toBinaryString((int) TextoParaCifrar.charAt(i));
@@ -80,29 +79,102 @@ public class sdes {
             }
             arregloByteActual = convertirString(actualBinario);
             arregloByteActual = PermutacionInicial(arregloByteActual);
-            arregloActualP1[0] = arregloByteActual[0]; arregloActualP1[1] = arregloByteActual[1]; arregloActualP1[2] = arregloByteActual[2]; arregloActualP1[3] = arregloByteActual[3];
-            c1 = Fk(arregloActualP1, llaveFinal1);
-            arregloActualP2[0] = arregloByteActual[4]; arregloActualP2[1] = arregloByteActual[5]; arregloActualP2[2] = arregloByteActual[6]; arregloActualP2[3] = arregloByteActual[7];
-            c2 = Fk(arregloActualP2, llaveFinal2);
-            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c1, c2)));
+            ultimosCuatro[0] = arregloByteActual[4]; ultimosCuatro[1] = arregloByteActual[5]; ultimosCuatro[2] = arregloByteActual[6]; ultimosCuatro[3] = arregloByteActual[7];
+            c1 = Fk(arregloByteActual, llaveFinal1);
+            arregloByteActual = ConcatenarArreglos(c1, ultimosCuatro);
+            c2 = Fk(arregloByteActual, llaveFinal2);
+            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, ultimosCuatro)));
             TextoCifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
         }
         escribirArchivoCifrado(NombreArchivo, extension + "|" + TextoCifrado);
         /* Fin del cifrado */
     }
 
+    public void Descifrar(String textCifrar, String key) throws Exception {
+        Key = key;
+        TextoParaCifrar = textCifrar;
+        String extension = "";
+        for (int i = 0; i < TextoParaCifrar.length(); i++) {
+            if (TextoParaCifrar.charAt(i) != '|') {
+                extension += TextoParaCifrar.charAt(i);
+            } else {
+                TextoParaCifrar = TextoParaCifrar.substring(i + 1, TextoParaCifrar.length());
+                i = TextoParaCifrar.length();
+            }
+        }
+
+        /* Creación de las llaves */
+
+        String llaveInicial = Integer.toBinaryString(Integer.parseInt(Key));
+        if (llaveInicial.length() < 10) {
+            for (int i = 0; i < 10 - llaveInicial.length(); i++) {
+                llaveInicial = "0" + llaveInicial;
+            }
+        }
+        boolean[] llave = convertirString(llaveInicial);
+        llave = Permutacion(llave);
+        boolean[] llave1 = {llave[0], llave[1], llave[2], llave[3], llave[4]};
+        boolean[] llave2 = {llave[5], llave[6], llave[7], llave[8], llave[9]};
+
+        llave1 = leftShift(llave1, 1);
+        llave2 = leftShift(llave2, 1);
+        llave = ConcatenarArreglos(llave1, llave2);
+        boolean[] llaveFinal1 = SeleccionarYPermutar(llave);
+
+        llave1 = leftShift(llave1, 2);
+        llave2 = leftShift(llave2, 2);
+        llave = ConcatenarArreglos(llave1, llave2);
+        boolean[] llaveFinal2 = SeleccionarYPermutar(llave);
+
+
+        /* Fin de creación de las llaves */
+        /* Inicio del cifrado*/
+
+        int longitud = TextoParaCifrar.length();
+        boolean[] arregloByteActual = null;
+        String actualBinario = "";
+        String binarioCifrado = "";
+        boolean[] c1;
+        boolean[] c2;
+        boolean[] ultimosCuatro = new boolean[4];
+        TextoDescifrado = "";
+        for (int i = 0; i < longitud; i++) {
+            actualBinario = Integer.toBinaryString((int) TextoParaCifrar.charAt(i));
+            switch (actualBinario.length()) {
+                case 8:
+                    break;
+                default:
+                    int cont = 8 - actualBinario.length();
+                    for (int contadorCeros = 0; contadorCeros < cont; contadorCeros++) {
+                        actualBinario = "0" + actualBinario;
+                    }
+                    break;
+            }
+            arregloByteActual = convertirString(actualBinario);
+            arregloByteActual = PermutacionInicial(arregloByteActual);
+            ultimosCuatro[0] = arregloByteActual[4]; ultimosCuatro[1] = arregloByteActual[5]; ultimosCuatro[2] = arregloByteActual[6]; ultimosCuatro[3] = arregloByteActual[7];
+            c1 = Fk(arregloByteActual, llaveFinal2);
+            arregloByteActual = ConcatenarArreglos(c1, ultimosCuatro);
+            c2 = Fk(arregloByteActual, llaveFinal1);
+            binarioCifrado = convertirBoolean(PermutacionInversa(ConcatenarArreglos(c2, ultimosCuatro)));
+            TextoDescifrado += String.valueOf((char) Integer.parseInt(binarioCifrado, 2));
+        }
+        TextoCifrado = "";
+        escribirArchivoDescifrado(NombreArchivo, TextoDescifrado, extension);
+        /* Fin del cifrado */
+    }
+
     private boolean[] Fk(boolean[] arreglo, boolean[] llave) {
-        boolean[] arregloParaSbox1 = new boolean[4];
-        boolean[] arregloParaSbox2 = new boolean[4];
-        boolean[] arregloDespuesSbox1;
-        boolean[] arregloDespuesSbox2;
-        arreglo = ExpandirPermutar(arreglo);
-        arreglo = XOR(arreglo, llave);
-        arregloParaSbox1[0] = arreglo[0]; arregloParaSbox1[1] = arreglo[1]; arregloParaSbox1[2] = arreglo[2]; arregloParaSbox1[3] = arreglo[3];
-        arregloParaSbox2[0] = arreglo[4]; arregloParaSbox2[1] = arreglo[5]; arregloParaSbox2[2] = arreglo[6]; arregloParaSbox2[3] = arreglo[7];
-        arregloDespuesSbox1 = convertirString(buscarEnSbox(arregloParaSbox1, sBox1));
-        arregloDespuesSbox2 = convertirString(buscarEnSbox(arregloParaSbox2, sBox2));
-        return ConcatenarArreglos(arregloDespuesSbox1, arregloDespuesSbox2);
+        boolean[] primeros4 = {arreglo[0], arreglo[1], arreglo[2], arreglo[3]};
+        boolean[] ultimos4 = {arreglo[4], arreglo[5], arreglo[6], arreglo[7]};
+        boolean[] expandido = ExpandirPermutar(ultimos4);
+        boolean[] luegoDelXor = XOR(expandido, llave);
+        boolean[] primeros4Sbox = {luegoDelXor[0], luegoDelXor[1], luegoDelXor[2], luegoDelXor[3]};
+        boolean[] ultimos4Sbox = {luegoDelXor[4], luegoDelXor[5], luegoDelXor[6], luegoDelXor[7]};
+        boolean[] binSboxes = convertirString(buscarEnSbox(primeros4Sbox, sBox1) + buscarEnSbox(ultimos4Sbox, sBox2));
+        binSboxes = Permutar(binSboxes);
+        boolean[] binFinal = XOR(primeros4, binSboxes);
+        return binFinal;
     }
 
     private boolean[] XOR(boolean[] arreglo1, boolean[] arreglo2) {
@@ -245,5 +317,48 @@ public class sdes {
         fileOutputStream.write(contenido.getBytes());
         fileOutputStream.close();
         return true;
+    }
+
+    public void escribirArchivoDescifrado(String nombreArchivo, String contenido, String extensionA) throws Exception {
+        File directorio = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            directorio = new File(Environment.getExternalStorageDirectory() + "/DescifradoEstructuras/");
+        else
+            directorio = new File(Contexto.getFilesDir() + "/DescifradoEstructuras/");
+        boolean dirCre = true;
+        if (!directorio.exists())
+            dirCre = directorio.mkdirs();
+        if (!dirCre) {
+            throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
+        }
+        File archivoEscribir = null;
+        if (!SobreescribirArchivo) {
+            boolean creado = false;
+            int numeroArchivo = 1;
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            creado = archivoEscribir.createNewFile();
+            while (!creado) {
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + "." + extensionA);
+                creado = archivoEscribir.createNewFile();
+                numeroArchivo++;
+            }
+        } else {
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            archivoEscribir.delete();
+            if (!archivoEscribir.createNewFile())
+                throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
+        }
+        boolean eliminoExtension = false;
+        int i = 0;
+        while (!eliminoExtension) {
+            if (contenido.charAt(i) == '|') {
+                contenido = contenido.substring(i + 1);
+                eliminoExtension = true;
+            }
+            i++;
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
+        fileOutputStream.write(contenido.getBytes());
+        fileOutputStream.close();
     }
 }
