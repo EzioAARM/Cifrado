@@ -109,7 +109,7 @@ public class ZigZagFragment extends Fragment {
 
                         FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
                         OutputStreamWriter escritor = new OutputStreamWriter(output);
-                        escritor.append(UBICACION_ARCHIVO_CIFRAR + "|" + UBICACION_GUARDAR + "/" + UBICACION_ARCHIVO_CIFRAR + "|" + "ZigZag\n");
+                        escritor.append(encriptador.NombreArchivo + "|" + UBICACION_GUARDAR + "/" + encriptador.NombreArchivo + "|" + "ZigZag\n");
                         escritor.close();
                         Toast.makeText(rootView.getContext(), "El archivo se cifró correctamente", Toast.LENGTH_LONG).show();
                     } else {

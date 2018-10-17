@@ -28,6 +28,7 @@ public class zigZag {
     public String NombreArchivoNuevo = "";
     public String NombreOriginalArchivo = "";
     public String outPut = "";
+    public String NombreArchivo = "";
     public String ubicacionArchivo = "";
     public ArrayList<Character> charList;
     private boolean SobreescribirArchivo;
@@ -156,6 +157,7 @@ public class zigZag {
             if (!archivoEscribir.createNewFile())
                 throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
         }
+        NombreArchivo = archivoEscribir.getName();
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
         fileOutputStream.write(contenido.getBytes());
         fileOutputStream.close();
