@@ -71,9 +71,11 @@ public class RSA {
             numCif = numCif.mod(nMod);
             textoCifrado += String.valueOf(numCif.toString()) + " ";
         }
-        escribirArchivoClave(NombreArchivo + "_public", String.valueOf(e) + " " + String.valueOf(n));
-        escribirArchivoClave(NombreArchivo + "_private", String.valueOf(d) + " " + String.valueOf(n));
+        String nPublic = NombreArchivo + "_public";
+        String nPrivate = NombreArchivo + "_private";
         escribirArchivoCifrado(NombreArchivo, NombreArchivo + extension + textoCifrado);
+        escribirArchivoClave(nPublic, String.valueOf(e) + " " + String.valueOf(n));
+        escribirArchivoClave(nPrivate, String.valueOf(d) + " " + String.valueOf(n));
     }
 
     private boolean escribirArchivoClave(String nombreArchivo, String contenido) throws Exception {

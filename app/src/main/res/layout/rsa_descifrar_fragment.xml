@@ -2,4 +2,64 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+    <Button
+        android:id="@+id/examinar_descifrar_rsa"
+        style="@style/StyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:text="Examinar" />
+
+    <EditText
+        android:id="@+id/ubicacion_archivo_descifrar_rsa"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examinar_descifrar_rsa"
+        android:layout_marginTop="10dp"
+        android:editable="false"
+        android:hint="@string/ubicacion" />
+
+    <CheckBox
+        android:id="@+id/sobreescribir_descifrar_rsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ubicacion_archivo_descifrar_rsa"
+        android:text="@string/sobreescribir" />
+
+    <TextView
+        android:id="@+id/info_carpeta_destino_descifrar_rsa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sobreescribir_descifrar_rsa"
+        android:text="@string/no_sobre" />
+
+    <TextView
+        android:id="@+id/separador"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:layout_below="@+id/info_carpeta_destino_descifrar_rsa"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="#1d1d1d"/>
+
+    <Button
+        android:id="@+id/examinar_private_descifrar_rsa"
+        style="@style/StyleButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/separador"
+        android:text="Examinar" />
+
+    <EditText
+        android:id="@+id/ubicacion_private_archivo_descifrar_rsa"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/examinar_private_descifrar_rsa"
+        android:layout_marginTop="10dp"
+        android:editable="false"
+        android:hint="Ubicación de la clave privada" />
 </RelativeLayout>
