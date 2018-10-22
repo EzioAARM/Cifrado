@@ -17,6 +17,7 @@ public class RSA {
     private Context Contexto;
     private boolean SobreescribirArchivo;
     public String NombreArchivo;
+    private String extensionA;
 
     public RSA(Context contexto, boolean sobreescribir, String nombre) {
         Contexto = contexto;
@@ -73,7 +74,7 @@ public class RSA {
         }
         String nPublic = NombreArchivo + "_public";
         String nPrivate = NombreArchivo + "_private";
-        escribirArchivoCifrado(NombreArchivo, NombreArchivo + extension + textoCifrado);
+        escribirArchivoCifrado(NombreArchivo, NombreArchivo +"|"+ extension +"|"+ textoCifrado);
         escribirArchivoClave(nPublic, String.valueOf(e) + " " + String.valueOf(n));
         escribirArchivoClave(nPrivate, String.valueOf(d) + " " + String.valueOf(n));
     }
@@ -182,6 +183,74 @@ public class RSA {
             i++;
         }
         return primo;
+    }
+
+    public void escribirArchivoDescifrado(String nombreArchivo, String contenido) throws Exception {
+        File directorio = null;
+        if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
+            directorio = new File(Environment.getExternalStorageDirectory() + "/DescifradoEstructuras/");
+        else
+            directorio = new File(Contexto.getFilesDir() + "/DescifradoEstructuras/");
+        boolean dirCre = true;
+        if (!directorio.exists())
+            dirCre = directorio.mkdirs();
+        if (!dirCre) {
+            throw new Exception("No se pudo crear la ruta " + directorio.getAbsolutePath());
+        }
+        File archivoEscribir = null;
+        if (!SobreescribirArchivo) {
+            boolean creado = false;
+            int numeroArchivo = 1;
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            creado = archivoEscribir.createNewFile();
+            while (!creado) {
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + "." + extensionA);
+                creado = archivoEscribir.createNewFile();
+                numeroArchivo++;
+            }
+        } else {
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            archivoEscribir.delete();
+            if (!archivoEscribir.createNewFile())
+                throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
+        }
+        boolean eliminoExtension = false;
+        int i = 0;
+        while (!eliminoExtension) {
+            if (contenido.charAt(i) == '|') {
+                contenido = contenido.substring(i + 1);
+                eliminoExtension = true;
+            }
+            i++;
+        }
+        FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
+        fileOutputStream.write(contenido.getBytes());
+        fileOutputStream.close();
+    }
+
+    public void descifrar(String textoCifrado, int n, int d){
+        String[] aChars = textoCifrado.split("\\s");
+        String aux = aChars[0];
+        String[] header = aux.split("|");
+        aChars[0] = header[2];
+        extensionA = header[1];
+        NombreArchivo = header[0];
+        BigInteger N = new BigInteger(String.valueOf(n));
+        BigInteger D = new BigInteger(String.valueOf(d));
+        BigInteger res;
+        String cadena = "";
+        for (int i = 0; i<aChars.length; i++) {
+            res = new BigInteger(String.valueOf(Integer.parseInt(aChars[i])));
+            res = res.modPow(D,N);
+            cadena = cadena+res.toString();
+        }
+        try {
+            escribirArchivoDescifrado(NombreArchivo, cadena);
+        }
+        catch (Exception e){
+
+        }
+
     }
 
 }
