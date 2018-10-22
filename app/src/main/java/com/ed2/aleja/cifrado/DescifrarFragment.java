@@ -86,6 +86,15 @@ public class DescifrarFragment extends Fragment {
                         sdesDescifrarFragment.setArguments(argumentos);
                         fragmentManager.beginTransaction().replace(R.id.contenedor_descifrados, sdesDescifrarFragment).commit();
                         break;
+                    case ".rsacif":
+                        fragmentManager = getActivity().getSupportFragmentManager();
+                        RSADescifrarFragment rsaDescifrarFragment = new RSADescifrarFragment();
+                        argumentos = new Bundle();
+                        argumentos.putSerializable("textoDescifrar", textoArchivo);
+                        argumentos.putSerializable("nombreArchivo", UBICACION_ARCHIVO_DESCIFRAR);
+                        rsaDescifrarFragment.setArguments(argumentos);
+                        fragmentManager.beginTransaction().replace(R.id.contenedor_descifrados, rsaDescifrarFragment).commit();
+                        break;
                     default:
                         Toast.makeText(rootView.getContext(), "Debe seleccionar un archivo de extensión .cif", Toast.LENGTH_LONG).show();
                         break;

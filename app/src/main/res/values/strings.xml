@@ -3,6 +3,7 @@
     <string-array name="Cifrados">
         <item>Zig-Zag</item>
         <item>S-DES</item>
+        <item>RSA</item>
     </string-array>
     <string name="cifrar">Cifrar</string>
     <string name="cifrados">Cifrados</string>

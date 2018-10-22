@@ -34,6 +34,10 @@ public class CifrarFragment extends Fragment {
                         fragmentManager = getActivity().getSupportFragmentManager();
                         fragmentManager.beginTransaction().replace(R.id.contenedor_cifrados, new SdesFragment()).commit();
                         break;
+                    case 2:
+                        fragmentManager = getActivity().getSupportFragmentManager();
+                        fragmentManager.beginTransaction().replace(R.id.contenedor_cifrados, new RSAFragment()).commit();
+                        break;
                 }
             }
 
