@@ -54,7 +54,15 @@ public class RSA {
             else
                 break;
         }
-        d = obtenerInverso(fi, e);
+        boolean encontrado = false;
+        int i = 0;
+        while (!encontrado) {
+            if ((i * e) % fi == 1){
+                d = i;
+                encontrado = true;
+            }
+            i++;
+        }
         n = p * q;
     }
 
@@ -76,7 +84,7 @@ public class RSA {
         nombreArchivoListado = NombreArchivo;
         String nPublic = NombreArchivo + "_public";
         String nPrivate = NombreArchivo + "_private";
-        escribirArchivoCifrado(NombreArchivo, NombreArchivo +"|"+ extension +"|"+ textoCifrado);
+        escribirArchivoCifrado(NombreArchivo, NombreArchivo + " " + extension + " " + textoCifrado);
         escribirArchivoClave(nPublic, String.valueOf(e) + " " + String.valueOf(n));
         escribirArchivoClave(nPrivate, String.valueOf(d) + " " + String.valueOf(n));
     }
@@ -187,7 +195,7 @@ public class RSA {
         return primo;
     }
 
-    public void escribirArchivoDescifrado(String nombreArchivo, String contenido) throws Exception {
+    public void escribirArchivoDescifrado(String nombreArchivo, String contenido, String extensionArchivo) throws Exception {
         File directorio = null;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
             directorio = new File(Environment.getExternalStorageDirectory() + "/DescifradoEstructuras/");
@@ -203,27 +211,18 @@ public class RSA {
         if (!SobreescribirArchivo) {
             boolean creado = false;
             int numeroArchivo = 1;
-            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + NombreArchivo + "." + extensionArchivo);
             creado = archivoEscribir.createNewFile();
             while (!creado) {
-                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + "." + extensionA);
+                archivoEscribir = new File(directorio.getAbsolutePath() + "/" + NombreArchivo + "(" + String.valueOf(numeroArchivo) + ")" + "." + extensionArchivo);
                 creado = archivoEscribir.createNewFile();
                 numeroArchivo++;
             }
         } else {
-            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + nombreArchivo + "." + extensionA);
+            archivoEscribir = new File(directorio.getAbsolutePath() + "/" + NombreArchivo + "." + extensionArchivo);
             archivoEscribir.delete();
             if (!archivoEscribir.createNewFile())
                 throw new Exception("No se pudo crear el archivo " + directorio.getAbsolutePath());
-        }
-        boolean eliminoExtension = false;
-        int i = 0;
-        while (!eliminoExtension) {
-            if (contenido.charAt(i) == '|') {
-                contenido = contenido.substring(i + 1);
-                eliminoExtension = true;
-            }
-            i++;
         }
         FileOutputStream fileOutputStream = new FileOutputStream(archivoEscribir);
         fileOutputStream.write(contenido.getBytes());
@@ -232,21 +231,18 @@ public class RSA {
 
     public void descifrar(String textoCifrado, int n, int d) throws Exception {
         String[] aChars = textoCifrado.split("\\s");
-        String aux = aChars[0];
-        String[] header = aux.split("|");
-        aChars[0] = header[2];
-        extensionA = header[1];
-        NombreArchivo = header[0];
+        NombreArchivo = aChars[0];
+        extensionA = aChars[1];
         BigInteger N = new BigInteger(String.valueOf(n));
         BigInteger D = new BigInteger(String.valueOf(d));
         BigInteger res;
         String cadena = "";
-        for (int i = 0; i<aChars.length; i++) {
+        for (int i = 2; i<aChars.length; i++) {
             res = new BigInteger(String.valueOf(Integer.parseInt(aChars[i])));
             res = res.modPow(D,N);
-            cadena = cadena+res.toString();
+            cadena = cadena + String.valueOf((char) Integer.parseInt(res.toString()));
         }
-        escribirArchivoDescifrado(NombreArchivo, cadena);
+        escribirArchivoDescifrado(NombreArchivo, cadena, extensionA);
     }
 
 }
