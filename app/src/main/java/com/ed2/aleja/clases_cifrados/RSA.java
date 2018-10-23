@@ -231,10 +231,9 @@ public class RSA {
     }
 
     public void descifrar(String textoCifrado, int n, int d) throws Exception {
-        String[] aChars = textoCifrado.split("\\s");
-        String aux = aChars[0];
-        String[] header = aux.split("|");
-        aChars[0] = header[2];
+        String[] header = textoCifrado.split("\\|");
+        String aux = header[2];
+        String[] aChars = aux.split("\\s");
         extensionA = header[1];
         NombreArchivo = header[0];
         BigInteger N = new BigInteger(String.valueOf(n));
@@ -244,7 +243,8 @@ public class RSA {
         for (int i = 0; i<aChars.length; i++) {
             res = new BigInteger(String.valueOf(Integer.parseInt(aChars[i])));
             res = res.modPow(D,N);
-            cadena = cadena+res.toString();
+            int temp = Integer.parseInt(res.toString());
+            cadena = cadena+(char)temp;
         }
         escribirArchivoDescifrado(NombreArchivo, cadena);
     }
