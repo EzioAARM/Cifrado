@@ -97,7 +97,7 @@ public class RSAFragment extends Fragment {
 
                     FileOutputStream output = rootView.getContext().openFileOutput("cifrados.txt", MODE_APPEND);
                     OutputStreamWriter escritor = new OutputStreamWriter(output);
-                    escritor.append(rsa.NombreArchivo + "|" + UBICACION_GUARDAR + "/" + rsa.NombreArchivo + "|" + "S-DES\n");
+                    escritor.append(rsa.nombreArchivoListado + "|" + UBICACION_GUARDAR + "/" + rsa.nombreArchivoListado + "|" + "RSA\n");
                     escritor.close();
                     Toast.makeText(rootView.getContext(), "El archivo se cifró correctamente", Toast.LENGTH_LONG).show();
                 } catch (Exception ex) {

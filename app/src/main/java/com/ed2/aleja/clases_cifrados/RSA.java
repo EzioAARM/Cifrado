@@ -18,6 +18,7 @@ public class RSA {
     private boolean SobreescribirArchivo;
     public String NombreArchivo;
     private String extensionA;
+    public String nombreArchivoListado;
 
     public RSA(Context contexto, boolean sobreescribir, String nombre) {
         Contexto = contexto;
@@ -72,6 +73,7 @@ public class RSA {
             numCif = numCif.mod(nMod);
             textoCifrado += String.valueOf(numCif.toString()) + " ";
         }
+        nombreArchivoListado = NombreArchivo;
         String nPublic = NombreArchivo + "_public";
         String nPrivate = NombreArchivo + "_private";
         escribirArchivoCifrado(NombreArchivo, NombreArchivo +"|"+ extension +"|"+ textoCifrado);
@@ -228,7 +230,7 @@ public class RSA {
         fileOutputStream.close();
     }
 
-    public void descifrar(String textoCifrado, int n, int d){
+    public void descifrar(String textoCifrado, int n, int d) throws Exception {
         String[] aChars = textoCifrado.split("\\s");
         String aux = aChars[0];
         String[] header = aux.split("|");
@@ -244,13 +246,7 @@ public class RSA {
             res = res.modPow(D,N);
             cadena = cadena+res.toString();
         }
-        try {
-            escribirArchivoDescifrado(NombreArchivo, cadena);
-        }
-        catch (Exception e){
-
-        }
-
+        escribirArchivoDescifrado(NombreArchivo, cadena);
     }
 
 }
